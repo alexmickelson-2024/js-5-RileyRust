@@ -17,7 +17,7 @@ function RenderProducts(ProductsList) {
     return ProductCardsElement;
   });
 }
-
+const totalElement = 0; 
 function RenderCart(ProductsList) {
   const CartCardsElement = document.getElementById("cart-container");
   CartCardsElement.replaceChildren();
@@ -26,13 +26,15 @@ function RenderCart(ProductsList) {
   CartCardsElement.appendChild(HeaderElement);
 
   ProductsList.forEach((product) => {
+   totalElement =+ product.price; 
     const cardElement = createCardElement(product);
     CartCardsElement.appendChild(cardElement);
   });
+  
+
 }
 
 function createCardElement(product) {
-  console.log("Product foreach", product);
   const cardElement = document.createElement("div");
   cardElement.classList.add("card");
   cardElement.draggable = true;
@@ -80,6 +82,7 @@ function CartEventListeners() {
     e.preventDefault();
     //add drag styles
   });
+
   CartCardsElement.addEventListener("drop", (e) => {
     console.log("dropped", e);
     console.log(cart);
@@ -92,38 +95,34 @@ function CartEventListeners() {
       return false;
     });
 
-   product.quantity = (product.quantity - 1)
-    RenderProducts(products)
-    // CartCardsElement.appendChild(product);
+    product.quantity = product.quantity - 1;
+    RenderProducts(products);
+
     const ItemsInCart = cart.find((p) => {
-        if (p.title === itemTitle) {
-          return true;
-        }
-        return false;
-      });
-      if (ItemsInCart){
-        
-        ItemsInCart.quantity = (ItemsInCart.quantity + 1);
+      if (p.title === itemTitle) {
+        return true;
       }
-      else{
+      return false;
+    });
 
-          cart = [...cart, {...product, quantity: 1 }];
-      }
-
-    // add that product to the cart
-    // CartCardsElement.appendChild(product)
-
-    //remove that quantity from original product
-
-    //render products
+    if (ItemsInCart) {
+      ItemsInCart.quantity = ItemsInCart.quantity + 1;
+    } else {
+      cart = [...cart, { ...product, quantity: 1 }];
+    }
 
     RenderCart(cart);
   });
+
   CartCardsElement.addEventListener("dragenter", (e) => {
     e.preventDefault();
-    //add drag styles
   });
 }
+
+
+
+
+
 
 RenderCart(cart);
 RenderProducts(products);
